@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace AutoProcrun
 {
     class Program
@@ -19,11 +18,10 @@ namespace AutoProcrun
 
             Service service = new Service(pathFile, serviceID, displayName, description, autoUpdate);
 
-            //service.SaveSettings(service);
+            service.SaveSettings(service);
+            service.InstallService();
 
-            //service.InstallService();
-
-            Service.DeleteService(service.settingsPath);
+            //Service.DeleteService(service.settingsPath);
 
             Console.ReadKey();
 
