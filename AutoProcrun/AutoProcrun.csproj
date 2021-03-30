@@ -137,7 +137,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="JavaServices\logs\Atechie_stderr.log" />
+    <None Include="JavaServices\logs\Atechie_stdout.log" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JavaServices\javatest.jar" />
+    <Content Include="JavaServices\latest_version\javatest.jar" />
+    <Content Include="JavaServices\procrun\atechie.exe" />
+    <Content Include="JavaServices\procrun\prunsrv.exe" />
+    <Content Include="JavaServices\settings\Atechie_settings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

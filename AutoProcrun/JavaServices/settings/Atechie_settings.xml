@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Service xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <serviceID>Atechie</serviceID>
+  <displayName>Atechie</displayName>
+  <description>default</description>
+  <startup>auto</startup>
+  <install>"D:\VSProjects\AutoProcrun\AutoProcrun\bin\Debug\JavaServices\procrun\prunsrv.exe"</install>
+  <jvm>"C:\Program Files\Java\jdk-16\bin\server\jvm.dll"</jvm>
+  <classpath>D:\VSProjects\AutoProcrun\AutoProcrun\bin\Debug\JavaServices\javatest.jar</classpath>
+  <environment>"PATH=C:\Program Files\Java\jdk-16\bin"</environment>
+  <javaHome>"C:\Program Files\Java\jdk-16"</javaHome>
+  <jvmOptions>"-XX:+HeapDumpOnOutOfMemoryError"</jvmOptions>
+  <startMode>jvm</startMode>
+  <stopMode>jvm</stopMode>
+  <startClass>com.company.Main</startClass>
+  <stopClass>com.company.Main</stopClass>
+  <startParams>start</startParams>
+  <stopParams>stop</stopParams>
+  <stdOutput>D:\VSProjects\AutoProcrun\AutoProcrun\bin\Debug\JavaServices\logs\Atechie_stdout.log</stdOutput>
+  <stdError>D:\VSProjects\AutoProcrun\AutoProcrun\bin\Debug\JavaServices\logs\Atechie_stderr.log</stdError>
+  <serviceDirectory>D:\VSProjects\AutoProcrun\AutoProcrun\bin\Debug\JavaServices</serviceDirectory>
+  <pathFile>D:\test\javatest.jar</pathFile>
+  <autoUpdate>false</autoUpdate>
+  <latestPath>D:\VSProjects\AutoProcrun\AutoProcrun\bin\Debug\JavaServices\latest_version\javatest.jar</latestPath>
+  <settingsPath>D:\VSProjects\AutoProcrun\AutoProcrun\bin\Debug\JavaServices\settings\Atechie_settings.xml</settingsPath>
+</Service>
