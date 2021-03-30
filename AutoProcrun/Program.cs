@@ -10,7 +10,7 @@ namespace AutoProcrun
 
             bool autoUpdate;
 
-            pathFile = @"D:\test\javatest.jar";
+            pathFile = @"D:\test\Version1\javatest.jar";
             serviceID = "AJavaServiceTest";
             displayName = "AJavaServiceTest";
             description = "default";
