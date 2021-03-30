@@ -25,7 +25,6 @@ namespace AutoProcrun
             }
             catch (Exception objException)
             {
-                Console.WriteLine("Nepravilnaya Comanda");
             }
         }
     }

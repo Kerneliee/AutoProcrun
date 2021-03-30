@@ -1,14 +1,4 @@
-﻿using java.util.jar;
-using sun.misc;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System;
 
 
 namespace AutoProcrun
@@ -22,28 +12,18 @@ namespace AutoProcrun
             bool autoUpdate;
 
             pathFile = @"D:\test\javatest.jar";
-            serviceID = "Atechie";
-            displayName = "Atechie";
+            serviceID = "AJavaServiceTest";
+            displayName = "AJavaServiceTest";
             description = "default";
-            autoUpdate = false;
+            autoUpdate = true;
 
-            //Service service = new Service(pathFile, serviceID, displayName, description, autoUpdate);
+            Service service = new Service(pathFile, serviceID, displayName, description, autoUpdate);
 
-            //Service.SaveSettings(service);
+            //service.SaveSettings(service);
 
-            //Service.DeleteService(serviceID);
+            //service.InstallService();
 
-            //if (service.GetVersion(service.latestPath) != service.GetVersion(service.classpath))
-            //{
-            //    System.IO.File.Copy(service.latestPath, service.classpath, true);
-            //    string command = "cd JavaServices\\procrun & prunsrv stop " + serviceID;
-            //    CmdCommand.ExecuteCommandSync(command);
-            //    command = "cd JavaServices\\procrun & prunsrv start " + serviceID;
-            //    CmdCommand.ExecuteCommandSync(command);
-            //    Console.WriteLine("zamena");
-            //}
-
-
+            Service.DeleteService(service.settingsPath);
 
             Console.ReadKey();
 

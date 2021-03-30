@@ -14,14 +14,13 @@ namespace AutoProcrun
     [Serializable]
     public class Service
     {
-        public void InstallService(string install, string serviceID, string displayName, string description, 
-            string startup, string jvm, string classpath, string environment, string javaHome, 
-            string serviceDirectory, string jvmOptions, string startMode, string startClass, string stdOutput, 
-            string stdError, string pathFile, string latestPath, string startParams, string stopParams, string stopMode, string stopClass)
+        //Установка сервиса 
+        public void InstallService()
         {
             string[] settings = new string[20];
             string allsettings = "";
             
+            //Здесь собираются настройки для сервиса, которые выполнятся в cmd
             #region Settings
             settings[0] = install + " //IS//" + serviceID;
             settings[1] = "--DisplayName \"" + displayName + "\"";
@@ -43,30 +42,33 @@ namespace AutoProcrun
             settings[17] = "--StdOutput=" + stdOutput;
             settings[18] = "--StdError=" + stdError;
             #endregion
-            for (int i = 1; i < 20; i++) Console.WriteLine(settings[i]);
+            for (int i = 0; i < 20; i++) Console.WriteLine(settings[i]);
             for (int i = 1; i < 20; i++) allsettings += settings[i] + " ";
 
-            allsettings = "cd JavaServices\\procrun & prunsrv update " + serviceID + " " + allsettings;
+            // jar сервис сохраняется в главную папку
+            File.Copy(pathFile, classpath, true);
+            File.Copy(pathFile, latestVersionPath, true);
 
+            allsettings = "cd JavaServices\\procrun & prunsrv update " + serviceID + " " + allsettings;
             CmdCommand.ExecuteCommandSync(settings[0]);
             CmdCommand.ExecuteCommandSync(allsettings);
-
-
         }
-        public static void DeleteService(string serviceID)
+        //Удалется сам сервис, файлы логов, настройки и jar файлы
+        public static void DeleteService(string settingsPath)
         {
-            Service service = LoadSettings(serviceID);
+            Service service = LoadSettings(settingsPath);
             string command = "cd JavaServices\\procrun & prunsrv delete " + service.serviceID;
             CmdCommand.ExecuteCommandSync(command);
             File.Delete(service.stdOutput);
             File.Delete(service.stdError);
-            File.Delete(service.latestPath);
+            File.Delete(service.latestVersionPath);
             File.Delete(service.classpath);
             File.Delete(service.settingsPath);
 
             Console.WriteLine("Deleted");
         }
-        public static void SaveSettings(Service service)
+        //Save сохраняет экземпляр класса Service в XML файл
+        public void SaveSettings(Service service)
         {  
 
             XmlSerializer formatter = new XmlSerializer(typeof(Service));
@@ -75,7 +77,7 @@ namespace AutoProcrun
 
             using (FileStream fs = new FileStream(service.settingsPath, FileMode.OpenOrCreate)) { formatter.Serialize(fs, service); }
         }
-
+        //Load получает экземпляр класса Service из XML файла
         public static Service LoadSettings(string settingsPath)
         {
             Service service = new Service();
@@ -88,6 +90,7 @@ namespace AutoProcrun
             }
             return service;
         }
+        //Открывает jar файл в виде архива и находит файл manifest.mf и возвращает весь текст в string переменную
         public string GetManifest(string classpath)
         {
             string text = "";
@@ -111,6 +114,7 @@ namespace AutoProcrun
             }
             return text;
         }
+        // Из manifest.mf находит Specification-Version
         public string GetVersion(string classpath)
         {
             string manifest = GetManifest(classpath);
@@ -124,6 +128,7 @@ namespace AutoProcrun
             }
             return version;
         }
+        //Из файла manifest.mf находист исполняемый класс
         public string GetMainClass(string classpath)
         {
             string manifest = GetManifest(classpath);
@@ -139,25 +144,21 @@ namespace AutoProcrun
         }
         public Service(string pathFile, string serviceID, string displayName, string description, bool autoUpdate)
         {
+            #region Default Settings
             this.pathFile = pathFile;
             this.serviceID = serviceID;
             this.displayName = displayName;
             this.description = description;
             this.autoUpdate = autoUpdate;
             
-
             serviceDirectory = System.IO.Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName) + "\\JavaServices";
             classpath = System.IO.Path.Combine(serviceDirectory, System.IO.Path.GetFileName(pathFile));
-            latestPath = System.IO.Path.Combine(serviceDirectory + "\\latest_version\\", System.IO.Path.GetFileName(pathFile));
-
-            File.Copy(pathFile, classpath, true);
-            File.Copy(pathFile, latestPath, true);
-
+            latestVersionPath = System.IO.Path.Combine(serviceDirectory + "\\latest_version\\", System.IO.Path.GetFileName(pathFile));
             startup = "auto";
             jvmOptions = "\"-XX:+HeapDumpOnOutOfMemoryError\"";
             startMode = "jvm";
             startParams = "start";
-            startClass = GetMainClass(classpath);
+            startClass = GetMainClass(pathFile);
             stopMode = "jvm";
             stopParams = "stop";
             stopClass = startClass;
@@ -165,15 +166,12 @@ namespace AutoProcrun
             stdOutput = serviceDirectory + "\\logs\\" + serviceID + "_stdout.log";
             stdError = serviceDirectory + "\\logs\\" + serviceID + "_stderr.log";
             settingsPath = serviceDirectory + "\\settings\\" + serviceID + "_settings.xml";
+            #endregion
 
-
-            jvm = "\"C:\\Program Files\\Java\\jdk-16\\bin\\server\\jvm.dll\"";
+            //Здесь необходимо указать свой путь к jdk
             javaHome = "\"C:\\Program Files\\Java\\jdk-16\"";
             environment = "\"PATH=C:\\Program Files\\Java\\jdk-16\\bin\"";
-
-
-            InstallService(install, serviceID, displayName, description, startup, jvm, classpath, environment, javaHome, serviceDirectory, jvmOptions, startMode, startClass, stdOutput, stdError, pathFile, latestPath, startParams, stopParams, stopMode, stopClass);
-
+            jvm = "\"C:\\Program Files\\Java\\jdk-16\\bin\\server\\jvm.dll\"";
         }
 
         public Service() { }
@@ -202,7 +200,7 @@ namespace AutoProcrun
         public string serviceDirectory;
         public string pathFile;
         public bool autoUpdate;
-        public string latestPath;
+        public string latestVersionPath;
         public string settingsPath;
 
     }
